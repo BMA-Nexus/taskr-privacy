@@ -30,7 +30,7 @@
 <body>
   <div class="wrap">
     <h1>Taskr Privacy Policy</h1>
-    <p class="sub">Last updated: May 26, 2026 · Version 2.1</p>
+    <p class="sub">Last updated: May 27, 2026 · Version 2.2</p>
     <span class="badge">BMA Nexus</span>
 
     <p>
@@ -265,6 +265,16 @@
     </ul>
     <p>Taskr does not control what the receiving app does with the data once you tap "share". Choose the receiving app carefully.</p>
 
+    <h3>6.7 Resend (transactional email service)</h3>
+    <p>When you send an invite to a shared list using the e-mail field (instead of the share-link button), Taskr sends an automated invitation e-mail to the invitee through <strong>Resend</strong> (operated by Resend Labs Inc., USA, with EU region in Frankfurt, Germany). The same Resend service is also used to deliver Supabase Auth e-mails such as account confirmation and password reset.</p>
+    <ul>
+      <li><strong>Data shared with Resend:</strong> the invitee's e-mail address, the inviter's e-mail address (displayed as "from" inside the message), the shared-list name and icon, and the one-time invite token (embedded in the link). For Supabase Auth e-mails: your e-mail address plus the confirmation/reset link.</li>
+      <li><strong>Region:</strong> Taskr uses Resend's <code>eu-west-1</code> (Frankfurt) region so that e-mail processing remains within the EU. Resend's full data-processing policy: <a href="https://resend.com/legal/privacy-policy" target="_blank">resend.com/legal/privacy-policy</a>. DPA: <a href="https://resend.com/legal/dpa" target="_blank">resend.com/legal/dpa</a>.</li>
+      <li><strong>Retention:</strong> Resend retains delivery logs (recipient, send timestamp, delivery status) for up to 30 days for operational and abuse-prevention purposes. E-mail body content is not retained after successful delivery.</li>
+      <li><strong>Legal basis:</strong> Art. 6(1)(b) — performance of contract (delivering the invite you initiated). For Supabase Auth e-mails: Art. 6(1)(b) for account confirmation and Art. 6(1)(f) (legitimate interest in account security) for password reset.</li>
+    </ul>
+    <p>If you do not want an invite e-mail to be sent, use the "Share invite link" button instead (Section 6.6) — that pathway never touches Resend.</p>
+
     <p><strong>We do not embed any advertising networks, analytics platforms, behavioural-profiling SDKs or social-media SDKs.</strong></p>
 
     <h2 id="transfers">7. International Data Transfers</h2>
@@ -345,6 +355,13 @@
        at the URL where this page is published.</p>
 
     <h3>12.1 Version history</h3>
+    <p><strong>Version 2.2 (May 27, 2026)</strong>:</p>
+    <ul>
+      <li>Added Section 6.7 disclosing Resend as transactional e-mail subprocessor (Resend Labs Inc., USA, EU region <code>eu-west-1</code> in Frankfurt). Used for shared-list invite e-mails initiated via the e-mail field, and for Supabase Auth e-mails (account confirmation, password reset).</li>
+      <li>Detailed data shared with Resend (invitee + inviter e-mail, list name and icon, invite token), retention (30 days for delivery logs, no body content retained after delivery), legal basis (Art. 6(1)(b) and 6(1)(f)).</li>
+      <li>Linked Resend's own privacy policy and DPA.</li>
+      <li>Clarified that users can avoid Resend entirely by using the "Share invite link" button (Section 6.6) instead of the e-mail field — that pathway never touches Resend.</li>
+    </ul>
     <p><strong>Version 2.1 (May 26, 2026)</strong>:</p>
     <ul>
       <li>Added Section 1.6 disclosing on-demand location data collection (lat/lng via "Current location" button), including both <code>ACCESS_FINE_LOCATION</code> and <code>ACCESS_COARSE_LOCATION</code> permissions.</li>
@@ -376,7 +393,7 @@
 
     <div class="footer">
       <p>© 2026 BMA Nexus. All rights reserved.</p>
-      <p>Privacy Policy v2.1 — May 26, 2026 — supersedes v2.0 (May 10, 2026) and v1.0 (April 2026).</p>
+      <p>Privacy Policy v2.2 — May 27, 2026 — supersedes v2.1 (May 26, 2026), v2.0 (May 10, 2026) and v1.0 (April 2026).</p>
     </div>
   </div>
 </body>
