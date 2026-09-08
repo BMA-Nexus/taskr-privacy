@@ -30,7 +30,7 @@
 <body>
   <div class="wrap">
     <h1>Taskr Privacy Policy</h1>
-    <p class="sub">Last updated: June 29, 2026 · Version 2.3</p>
+    <p class="sub">Last updated: September 8, 2026 · Version 2.4</p>
     <span class="badge">BMA Nexus</span>
 
     <p>
@@ -169,7 +169,7 @@
     <p><strong>Corruption backups</strong>: if Taskr detects a JSON parse error on startup (e.g. partial write during a crash), the raw corrupted data is preserved under <code>tf-v4-corrupt-&lt;timestamp&gt;</code> as a debugging safeguard. These backups are not currently auto-deleted; you can wipe them via Settings → "Clear all data". An automatic retention policy is planned for a future version.</p>
 
     <h3>4.2 Cloud storage (only if you sign in)</h3>
-    <p>If you create an account, your task data is synced to a <strong>Supabase PostgreSQL database</strong> in the EU region (Frankfurt, Germany).
+    <p>If you create an account, your task data is synced to a <strong>Supabase PostgreSQL database</strong> in the EU region (Ireland).
        Supabase is SOC 2 Type II compliant. Your data is protected by:</p>
     <ul>
       <li><strong>Row Level Security (RLS)</strong> — database-level policies that ensure only you can read or write your own records.</li>
@@ -180,14 +180,14 @@
 
     <h3>4.3 Attachments storage</h3>
     <p>Attachments (Pro feature) are stored in <strong>Supabase Storage</strong> (S3-compatible object storage hosted by Supabase
-       in Frankfurt). Each file is namespaced under your user ID and protected by RLS policies that mirror your list access.</p>
+       in Ireland). Each file is namespaced under your user ID and protected by RLS policies that mirror your list access.</p>
 
     <h3>4.4 Notification tokens</h3>
     <p>FCM device tokens are stored in our database (table <code>fcm_tokens</code>), bound to your user ID. They are used solely
        to route shared-list push notifications to your device. Tokens are deleted when you sign out or delete your account.</p>
 
     <h3>4.5 Subprocessors</h3>
-    <p>Supabase, our infrastructure provider, hosts its EU region on Amazon Web Services (AWS) in Frankfurt, Germany.
+    <p>Supabase, our infrastructure provider, hosts its EU region on Amazon Web Services (AWS) in Ireland.
        AWS is therefore a subprocessor of Supabase. Supabase's full subprocessor list is available at
        <a href="https://supabase.com/privacy" target="_blank">supabase.com/privacy</a>.</p>
 
@@ -233,7 +233,7 @@
     <h3>6.1 Supabase</h3>
     <ul>
       <li><strong>Purpose:</strong> authentication, cloud database (PostgreSQL), file storage (S3-compatible), realtime subscriptions, transactional emails (verification, password reset).</li>
-      <li><strong>Region:</strong> EU (Frankfurt).</li>
+      <li><strong>Region:</strong> EU (Ireland).</li>
       <li><strong>Privacy policy:</strong> <a href="https://supabase.com/privacy" target="_blank">supabase.com/privacy</a></li>
     </ul>
 
@@ -276,10 +276,10 @@
     <p>Taskr does not control what the receiving app does with the data once you tap "share". Choose the receiving app carefully.</p>
 
     <h3>6.7 Resend (transactional email service)</h3>
-    <p>When you send an invite to a shared list using the e-mail field (instead of the share-link button), Taskr sends an automated invitation e-mail to the invitee through <strong>Resend</strong> (operated by Resend Labs Inc., USA, with EU region in Frankfurt, Germany). The same Resend service is also used to deliver Supabase Auth e-mails such as account confirmation and password reset.</p>
+    <p>When you send an invite to a shared list using the e-mail field (instead of the share-link button), Taskr sends an automated invitation e-mail to the invitee through <strong>Resend</strong> (operated by Resend Labs Inc., USA, with EU region in Ireland). The same Resend service is also used to deliver Supabase Auth e-mails such as account confirmation and password reset.</p>
     <ul>
       <li><strong>Data shared with Resend:</strong> the invitee's e-mail address, the inviter's e-mail address (displayed as "from" inside the message), the shared-list name and icon, and the one-time invite token (embedded in the link). For Supabase Auth e-mails: your e-mail address plus the confirmation/reset link.</li>
-      <li><strong>Region:</strong> Taskr uses Resend's <code>eu-west-1</code> (Frankfurt) region so that e-mail processing remains within the EU. Resend's full data-processing policy: <a href="https://resend.com/legal/privacy-policy" target="_blank">resend.com/legal/privacy-policy</a>. DPA: <a href="https://resend.com/legal/dpa" target="_blank">resend.com/legal/dpa</a>.</li>
+      <li><strong>Region:</strong> Taskr uses Resend's <code>eu-west-1</code> (Ireland) region so that e-mail processing remains within the EU. Resend's full data-processing policy: <a href="https://resend.com/legal/privacy-policy" target="_blank">resend.com/legal/privacy-policy</a>. DPA: <a href="https://resend.com/legal/dpa" target="_blank">resend.com/legal/dpa</a>.</li>
       <li><strong>Retention:</strong> Resend retains delivery logs (recipient, send timestamp, delivery status) for up to 30 days for operational and abuse-prevention purposes. E-mail body content is not retained after successful delivery.</li>
       <li><strong>Legal basis:</strong> Art. 6(1)(b) — performance of contract (delivering the invite you initiated). For Supabase Auth e-mails: Art. 6(1)(b) for account confirmation and Art. 6(1)(f) (legitimate interest in account security) for password reset.</li>
     </ul>
@@ -304,7 +304,7 @@
     <p><strong>We do not embed any advertising networks, behavioural-analytics platforms, profiling SDKs or social-media SDKs.</strong> The only third-party SDK that processes your data is RevenueCat (Section 6.8), used solely for Pro subscription management.</p>
 
     <h2 id="transfers">7. International Data Transfers</h2>
-    <p>Your account data and task data are stored in the EU (Frankfurt, Germany).</p>
+    <p>Your account data and task data are stored in the EU (Ireland).</p>
     <p>However, push notifications sent via Firebase Cloud Messaging may transit through Google servers located outside the EU.
        Google relies on the EU-US Data Privacy Framework and Standard Contractual Clauses (SCCs) approved by the European Commission
        to comply with EU data protection law for these transfers. Details: <a href="https://policies.google.com/privacy/frameworks" target="_blank">policies.google.com/privacy/frameworks</a>.</p>
@@ -384,6 +384,15 @@
        at the URL where this page is published.</p>
 
     <h3>12.1 Version history</h3>
+    <p><strong>Version 2.4 (September 8, 2026)</strong>:</p>
+    <ul>
+      <li>Corrected the stated hosting region. Supabase (database, file storage, authentication) and Resend both run in the
+          AWS <code>eu-west-1</code> region, which is <strong>Ireland</strong>. Earlier versions of this policy described
+          <code>eu-west-1</code> as &ldquo;Frankfurt, Germany&rdquo; &mdash; Frankfurt is a different AWS region
+          (<code>eu-central-1</code>). <strong>Nothing about the actual processing changed</strong>: your data has been stored
+          and processed inside the European Union the whole time, and still is. Only the description of which EU location was
+          inaccurate, and it has now been corrected in Sections 4.2, 4.3, 4.5, 6 and 7.</li>
+    </ul>
     <p><strong>Version 2.3 (June 29, 2026)</strong>:</p>
     <ul>
       <li>Disclosed the optional <strong>Taskr Pro</strong> subscription: new Section 1.9 (subscription &amp; purchase data, with the payment handled by Google Play and the on-device-only 14-day trial), Section 6.8 (RevenueCat, Inc., USA as subscription-management processor — data sent, IP/metadata, processor role + DPA, backend webhook, restore flow) and Section 6.9 (Google Play Billing).</li>
@@ -429,7 +438,7 @@
 
     <div class="footer">
       <p>© 2026 BMA Nexus. All rights reserved.</p>
-      <p>Privacy Policy v2.3 — June 29, 2026 — supersedes v2.2 (May 27, 2026), v2.1 (May 26, 2026), v2.0 (May 10, 2026) and v1.0 (April 2026).</p>
+      <p>Privacy Policy v2.4 — September 8, 2026 — supersedes v2.3 (June 29, 2026), v2.2 (May 27, 2026), v2.1 (May 26, 2026), v2.0 (May 10, 2026) and v1.0 (April 2026).</p>
     </div>
   </div>
 </body>
