@@ -30,7 +30,7 @@
 <body>
   <div class="wrap">
     <h1>Taskr Privacy Policy</h1>
-    <p class="sub">Last updated: September 8, 2026 · Version 2.4</p>
+    <p class="sub">Last updated: October 8, 2026 · Version 2.5</p>
     <span class="badge">BMA Nexus</span>
 
     <p>
@@ -65,82 +65,86 @@
     <h3>1.1 Account data (only if you create an account)</h3>
     <ul>
       <li><strong>Email address</strong> — used only to authenticate you via Supabase Auth and to send transactional emails
-          (account verification, password reset).</li>
+          (account verification, password reset, and confirming a change of e-mail address that you start in Settings). The link in such an e-mail ends on a web page hosted on GitHub Pages; like any website, GitHub receives your IP address and browser details when that page loads.</li>
       <li><strong>Hashed password</strong> — stored only in Supabase Auth (bcrypt-hashed; we never see your plaintext password).</li>
       <li><strong>Session token (JWT)</strong> — stored locally on your device to keep you signed in; refreshed automatically.</li>
+      <li><strong>Account creation date</strong>: recorded by Supabase Auth when you register. Taskr uses it to determine your 14-day free trial, in the app and on our server (Section 1.9). While you are signed in, the app also keeps it on your device in the local trial and Pro-status record (Section 4.1).</li>
     </ul>
 
     <h3>1.2 Task data</h3>
     <ul>
-      <li>Your <strong>lists, tasks, subtasks, deadlines, priorities, notes, locations, reminder times and timezone preferences</strong>.</li>
-      <li>App settings: theme, language, default priority, sort order, notification preferences.</li>
+      <li>Your <strong>lists, tasks, subtasks, deadlines, priorities, details (each task's free-text details field), locations, reminder times and timezone preferences</strong>. A task you create while signed in also stores your account identifier (your Supabase user ID, not your e-mail address) as its creator; once a task is in a shared list, Taskr uses it to tell your own tasks from those of other members (Section 5.2). A recurring task also stores a series identifier that links its repetitions, so that completed repetitions of the same series do not each count towards the free task limit.</li>
+      <li>The contents of your <strong>Notebook</strong>: each note's title, text, optional list and pinned state. Notes are stored on your device under their own key (<code>tf-notes</code>, next to <code>tf-v4</code>) and, if you sign in, in the <code>notes</code> column of your own <code>user_data</code> row. Notes are never shared with members of a shared list. On the free plan you can create up to 15 notes with up to 200 characters of text each; Pro, or the 14-day trial, raises that to 200 notes with up to 5,000 characters each. Nothing is deleted when you are above a free limit, for example after a trial ends: the 15 oldest notes stay editable, newer notes can still be read, copied and deleted, and a longer text can be shortened but not extended.</li>
+      <li>App settings, such as theme, language, default list and priority, sort order, display density and notification and reminder preferences, and two numbers that record how many lists and how many open tasks of your own stay fully usable on the free plan. These two numbers are set from the lists and open tasks you have the first time you use app version 1.7.0 or later (at least 5 and at most 30 lists, at least 20 tasks), also if you are on Pro or in the trial at that moment, and set again in the same way when your settings are reset, for example by signing out or by "Clear all data". They are synced and backed up with your other settings.</li>
       <li>Onboarding state (which tour-tips you have seen).</li>
     </ul>
 
     <h3>1.3 Shared-list data (only if you share or join a list)</h3>
     <ul>
       <li>The <strong>email addresses of people you invite</strong> to a shared list (stored in our database so they can accept the invite even if they don't have a Taskr account yet).</li>
-      <li>The <strong>email addresses of lists you join</strong>, including the owner's email.</li>
+      <li>For each invitation e-mail that Taskr sends or tries to send on your behalf (Section 6.7): your account identifier, the shared list it concerns, a SHA-256 hash of the invitee's e-mail address (not the address itself) and the time. Our server uses this record only to apply the limits on invitation e-mails; it cannot be read from the app, and Section 8 describes when it is deleted.</li>
+      <li>Your <strong>own e-mail address as a member</strong> of lists you join (the list owner's address reaches you only through the invitation e-mail, Section 6.7).</li>
       <li>Membership role (owner, accepted member, pending invite) and invitation timestamps.</li>
+      <li>For tasks in a shared list, where available: the account identifier (Supabase user ID) of the member the task is attributed to and of the member who last changed it. These identifiers are stored with the task in our database and are received by everyone in that list (Section 5.2).</li>
     </ul>
 
-    <h3>1.4 Attachments (only if you upload files — Pro feature)</h3>
+    <h3>1.4 Attachments (only if you upload files)</h3>
     <ul>
-      <li><strong>Files you attach</strong> to tasks (photos, documents, video and audio for Pro users) — uploaded to Supabase Storage with Row Level Security.</li>
+      <li><strong>Files you attach</strong> to tasks (photos and documents; video and audio for Pro users) are uploaded to Supabase Storage with Row Level Security. Attachments are available on every account: a free account can attach 1 file of up to 10 MB per task, a Pro account up to 15 files per task with higher size limits (shown in the app).</li>
       <li>Each file is stored under your user ID and is only accessible to you and members of the shared list (if applicable).</li>
     </ul>
 
-    <h3>1.5 Push notification token (only if you enable push notifications for shared lists)</h3>
+    <h3>1.5 Push notification token (if you are signed in and have allowed notifications)</h3>
     <ul>
-      <li><strong>Firebase Cloud Messaging (FCM) device token</strong> — a unique identifier issued by Google to deliver push notifications to your device. Stored in our database and bound to your user ID.</li>
+      <li><strong>Firebase Cloud Messaging (FCM) device token</strong> — a unique identifier issued by Google to deliver push notifications to your device. Stored in our database and bound to your user ID. Taskr registers this token for every signed-in user who has granted the Android notification permission; there is no separate switch for shared-list push notifications. The token is only ever used to send notifications about shared lists you belong to (Section 6.2); if you are not in any shared list, nothing is sent to it.</li>
       <li>The token is generated by Google Play Services on your device. It changes when the app is reinstalled or app data is cleared.</li>
     </ul>
 
     <h3>1.6 Location data (optional, on-demand)</h3>
     <p>Taskr can attach a geographic location to individual tasks if you explicitly request it:</p>
     <ul>
-      <li><strong>Trigger</strong>: only when you tap the "Current location" button in the task editor. Taskr never accesses your location in the background, while the app is closed, or for any other purpose (no geo-fencing, no automatic tagging, no analytics).</li>
+      <li><strong>Trigger</strong>: only when you tap the "Use current location" button in the task editor. Taskr never accesses your location in the background, while the app is closed, or for any other purpose (no geo-fencing, no automatic tagging, no analytics).</li>
       <li><strong>Permissions</strong>: Taskr declares <code>ACCESS_FINE_LOCATION</code> (precise lat/lng) and <code>ACCESS_COARSE_LOCATION</code> (network-based approximation) in its Android manifest. Android 12+ users may grant approximate-only; this still works. Taskr requests the permission only the first time you tap the button; you may deny without affecting any other functionality.</li>
-      <li><strong>Data collected</strong>: latitude and longitude coordinates (device-provided), plus an optional human-readable label (e.g. street + city) if Android offline reverse-geocoding is available.</li>
+      <li><strong>Data collected</strong>: latitude and longitude coordinates (device-provided). Taskr does not convert coordinates into an address (no reverse geocoding); the address or place name shown on a task is only the text you typed yourself in the location field.</li>
       <li><strong>Storage</strong>: stored locally on your device as part of the task. If cloud sync is enabled, also stored in the <code>user_data</code> table (your private cloud row). For tasks in a shared list, the coordinates are also stored in <code>shared_tasks</code> and visible to the other members of that list.</li>
-      <li><strong>Sharing</strong>: never sent to third parties beyond Supabase storage. We do not use this data for analytics, advertising, or profiling.</li>
+      <li><strong>Sharing</strong>: never sent by us to third parties beyond Supabase storage. You can pass them on yourself: tapping "Open in Maps" hands the coordinates to the maps app on your device (Section 6.4), and a JSON backup you create contains them together with the other fields of your tasks (Section 6.6). We do not use this data for analytics, advertising, or profiling.</li>
       <li><strong>Deletion</strong>: tap the red ✕ next to the coordinates in the task editor to remove the location from that task. "Clear all data" removes all location entries from device and cloud.</li>
     </ul>
 
     <h3>1.7 What we DO NOT collect</h3>
     <div class="callout">
-      <p><strong>Taskr contains no advertising, no behavioural or usage tracking, and no profiling.</strong></p>
+      <p><strong>Taskr contains no advertising, no tracking of what you do in the app, and no profiling.</strong></p>
     </div>
     <ul>
       <li>No Google Analytics, no Firebase Analytics, no Crashlytics, no Sentry, no Facebook SDK.</li>
       <li>No advertising IDs (no AAID / IDFA).</li>
-      <li>No device fingerprinting, no usage statistics, no background or continuous location tracking.</li>
-      <li>No geo-fencing or automatic location tagging — location is only attached when you tap the "Current location" button (see 1.6).</li>
+      <li>No device fingerprinting, no statistics about what you do in the app, no background or continuous location tracking.</li>
+      <li>No geo-fencing or automatic location tagging — location is only attached when you tap the "Use current location" button (see 1.6).</li>
       <li>No contact-list access, no calendar access, no microphone access (unless you choose to attach an audio file).</li>
-      <li>The only third-party SDK that processes any of your data is <strong>RevenueCat</strong>, used solely for Pro subscription management (Section 6.8). It processes purchase data only — from which RevenueCat may compute <strong>aggregate subscription metrics</strong> (e.g. how many users subscribe) on our behalf. That is the only sense in which an "analytics" purpose applies; it is <strong>not</strong> user-level behavioural or app-usage analytics.</li>
+      <li>Apart from our backend provider <strong>Supabase</strong> (Section 6.1) and <strong>Google Play</strong> itself (Sections 6.3 and 6.9), the only third-party SDKs that process any of your data are <strong>RevenueCat</strong> (Section 6.8) and <strong>Firebase Cloud Messaging</strong> (Section 6.2). Google Play also provides the in-app rating prompt: Taskr asks Google Play to show it at most once, after your tenth completed task in the app, and Google decides whether it actually appears. The RevenueCat SDK runs on every installation to determine whether your account has Pro status: it receives an anonymous app-user identifier and, once you sign in, your Taskr account identifier, together with technical metadata such as IP address, operating system and app version. Purchase data is processed only if you actually buy a subscription. From that purchase data RevenueCat may compute <strong>aggregate subscription metrics</strong> (e.g. how many users subscribe) on our behalf. Because every installation contacts RevenueCat, its dashboard also shows us <strong>totals of installations</strong>: how many are new, per day and per country, and how many were active in a recent period. We look at those totals, for example to see whether an advertising campaign leads to installations. These figures, together with simple counts from our own database such as the number of accounts (Section 3), are the only sense in which an "analytics" purpose applies; they are totals, <strong>not</strong> records about individual users, and say nothing about what you do in the app. Firebase Cloud Messaging processes only your device token and the shared-list notifications described in Section 6.2.</li>
     </ul>
 
     <h3>1.8 Notification content (lock-screen visibility)</h3>
     <p>Both local reminders and shared-task push notifications include the task text in the notification body:</p>
     <ul>
-      <li><strong>Local notifications</strong>: when you schedule a reminder, the notification body contains the task title and (optional) note text. This is generated and stored entirely on your device by Android.</li>
-      <li><strong>Shared-task push notifications</strong> (Firebase Cloud Messaging): when a member of a shared list edits or completes a task, other members receive a push notification. The body is capped at 240 characters and sanitized (control characters stripped) before being sent through Google's FCM servers.</li>
+      <li><strong>Local notifications</strong>: when you schedule a reminder, the notification body contains the task title only (not the task's details text). This is generated and stored entirely on your device by Android. The optional recurring reminder ("nudge") that you can switch on in Settings contains a fixed text and no task content.</li>
+      <li><strong>Shared-task push notifications</strong> (Firebase Cloud Messaging): when a member of a shared list adds or completes a task, the other members receive a push notification; editing a task does not trigger one. The title is the list name and the body is the task text preceded by "New task:" or "Task completed:" (in the app language of the member who acted). The notification does not name the member who acted. The body is capped at 240 characters and sanitized (control characters stripped) before being sent through Google's FCM servers.</li>
       <li><strong>Lock screen visibility</strong>: by default, Android shows notification content on the lock screen. Anyone with physical access to your device may see the task text. If your tasks contain sensitive information, we recommend changing your Android notification settings to "Hide sensitive content" or "Don't show notifications at all" on the lock screen.</li>
       <li><strong>Accessibility services</strong>: notification bodies are readable by Android accessibility services (e.g. TalkBack, third-party screen readers). Be aware that accessibility apps you have installed may receive your task text.</li>
     </ul>
 
-    <h3>1.9 Subscription &amp; purchase data (only if you buy Taskr Pro)</h3>
-    <p>Taskr Pro is an <strong>optional</strong> paid subscription sold through <strong>Google Play's billing system</strong> (the current price is shown in the app and on Google Play before you confirm). The 14-day free trial is tracked only in local app storage on your device — it involves no personal-data processing and no purchase data. If you choose to subscribe:</p>
+    <h3>1.9 Subscription &amp; purchase data</h3>
+    <p>Taskr Pro is an <strong>optional</strong> paid subscription sold through <strong>Google Play's billing system</strong> (the current price is shown in the app and on Google Play before you confirm). The 14-day free trial involves no purchase data. If you are not signed in, the trial is tracked only in local app storage on your device and starts the first time you open the app. If you are signed in, it runs until 14 days after your account was created: the app reads the creation date of your account from Supabase Auth (Section 1.1), and our server applies the same rule to give accounts in their trial the member limit of Pro for shared lists (Section 5.1) and the storage quota of Pro. While you are signed in to an account that is older than 14 days, a trial still running on the device does not apply; after you sign out, the trial of the device applies again. To determine whether your account has Pro status, Taskr uses the <strong>RevenueCat</strong> SDK on every installation, whether or not you ever buy anything: it receives an anonymous app-user identifier and, once you sign in, your Taskr account identifier (Section 6.8). If you choose to subscribe:</p>
     <ul>
       <li><strong>Google Play processes the payment</strong> and the underlying purchase token. We never receive or store your card number, billing address or other payment credentials.</li>
       <li><strong>Subscription validation</strong> is handled by <strong>RevenueCat</strong> (see Section 6.8). For this, Taskr sends RevenueCat your <strong>Taskr account identifier</strong> (your Supabase user ID, used as RevenueCat's "App User ID" so your Pro status follows your account across devices); RevenueCat then tracks your purchase/transaction history — which product, purchase and renewal dates, and subscription status — validating it directly with Google Play.</li>
-      <li><strong>Pro status in our database</strong>: a single row in our <code>pro_users</code> table records that your account is Pro (a boolean flag plus the renewal date), so your storage quota matches your plan. This row contains <strong>no</strong> payment information.</li>
+      <li><strong>Pro status in our database</strong>: a single row in our <code>pro_users</code> table records that your account is Pro (a boolean flag, the renewal date and the time of the last update). Our server uses this row, together with the creation date of your account for the 14-day trial, to apply the storage quota and the member limit for shared lists (Section 5.1) that match your plan. This row contains <strong>no</strong> payment information.</li>
     </ul>
 
     <h2 id="legal">2. Legal Basis for Processing (GDPR Art. 6)</h2>
     <p>Where the EU General Data Protection Regulation applies, we rely on the following legal bases to process your data:</p>
     <ul>
-      <li><strong>Performance of a contract (Art. 6(1)(b))</strong> — to provide the Taskr service you signed up for: storing your tasks, syncing them between your devices, processing your account, and — if you subscribe — providing, validating and managing your Taskr Pro subscription.</li>
+      <li><strong>Performance of a contract (Art. 6(1)(b))</strong> — to provide the Taskr service you signed up for: storing your tasks and notes, syncing them between your devices, processing your account, determining whether your account has Pro status (Section 6.8), and — if you subscribe — providing, validating and managing your Taskr Pro subscription.</li>
       <li><strong>Legitimate interests (Art. 6(1)(f))</strong> — for security, fraud prevention, abuse-prevention rate limits and routing FCM push notifications to the device tokens you registered.</li>
       <li><strong>Consent (Art. 6(1)(a))</strong> — for sending you push notifications (consent given via the system POST_NOTIFICATIONS prompt on Android 13+) and for using cloud sync (consent given by signing up for an account).</li>
       <li><strong>Legal obligation (Art. 6(1)(c))</strong> — when required by law, e.g. responding to lawful requests from authorities.</li>
@@ -148,38 +152,43 @@
 
     <h2 id="use">3. How We Use Your Information</h2>
     <ul>
-      <li>To save your task data on your device and (if you sign in) sync it across your other devices.</li>
+      <li>To save your task data and notes on your device and (if you sign in) sync them across your other devices.</li>
       <li>To deliver local reminder notifications scheduled by your device. These are processed entirely on-device — we never receive or store the content of local reminders.</li>
       <li>To enable shared-list collaboration: showing real-time updates to other members of a list you own or joined.</li>
       <li>To deliver push notifications for shared-list activity (e.g. "A task was added to your shared list"). These pass through Firebase Cloud Messaging — see Section 6.2.</li>
       <li>To authenticate you (email + password) and maintain your signed-in session.</li>
-      <li>To allow you to upload attachments to tasks and download them on your other devices (Pro feature).</li>
-      <li>If you subscribe to Pro: to validate and manage your subscription and unlock Pro features across your devices.</li>
+      <li>To allow you to upload attachments to tasks and download them on your other devices.</li>
+      <li>To determine whether your account has Pro status (via RevenueCat, on every installation) and, if you subscribe, to validate and manage your subscription and unlock Pro features across your devices.</li>
+      <li>To apply the limits of your plan (free, trial or Pro), such as the number of lists, tasks and notes, the number of people you can share a list with, the attachments per task and your storage space. For this Taskr uses your Pro status, the creation date of your account, the account identifiers recorded on shared tasks, the series identifiers of recurring tasks and two numbers stored in your settings (Sections 1.1, 1.2, 1.3 and 1.9).</li>
+      <li>To see, as totals only, how many installations, accounts and subscriptions there are, for example to judge whether an advertising campaign leads to installations (Section 1.7). These totals do not show what any individual user does in the app.</li>
     </ul>
     <p>We do not sell, rent, trade or share your personal data with third parties for marketing purposes. We do not profile users.</p>
 
     <h2 id="storage">4. Data Storage &amp; Security</h2>
 
     <h3>4.1 On-device storage</h3>
-    <p>When you use Taskr without signing in, all your data is stored on your device using <strong>Capacitor Preferences</strong>
+    <p>When you use Taskr without signing in, your lists, tasks, Notebook notes and settings are stored only on your device, using <strong>Capacitor Preferences</strong>
        (Android's <code>SharedPreferences</code>), which is sandboxed to the Taskr app and protected by the operating system.
-       This data never leaves your device.</p>
+       This content never leaves your device, unless you hand it to another app yourself, for example by exporting, sharing or opening a link (Sections 6.4 to 6.6).
+       Separately, the RevenueCat SDK sends an anonymous identifier and basic technical metadata to RevenueCat on every installation (Section 6.8).
+       If you allow notifications, Google Play services also issues a push token for your device; Taskr only stores that token once you sign in (Section 1.5).</p>
     <p><strong>Local key structure</strong>: the primary storage key is <code>tf-v4</code> (Capacitor Preferences / Android <code>SharedPreferences</code>).
-       It contains your lists, tasks, app settings, and onboarding state in a single JSON document. A cached snapshot of shared-task badges is also stored locally for fast cold-start.</p>
-    <p><strong>Corruption backups</strong>: if Taskr detects a JSON parse error on startup (e.g. partial write during a crash), the raw corrupted data is preserved under <code>tf-v4-corrupt-&lt;timestamp&gt;</code> as a debugging safeguard. These backups are not currently auto-deleted; you can wipe them via Settings → "Clear all data". An automatic retention policy is planned for a future version.</p>
+       It contains your lists, tasks, app settings, and onboarding state in a single JSON document. The same document also holds a local copy of the <strong>full content of every task in every shared list you belong to</strong> (field <code>sharedTasks</code>, including tasks written by other members); this copy is used by the home-screen widgets and for reminders while the app is closed. This copy also contains the account identifiers (Supabase user IDs, not e-mail addresses) recorded on shared tasks (Section 5.2). Your Notebook is stored under a separate key, <code>tf-notes</code>. Two further items can hold task content: edits to shared tasks that you make while offline wait in a local queue (<code>tf-shared-queue-v1</code>) until they are sent, and a video or document of up to 20 MB that you open is temporarily copied into the app's private cache folder (<code>taskr-open</code>) so the viewer app can read it. While a registration waits for confirmation of your e-mail address, the address you typed is kept in the app's local storage (<code>taskr-pending-signup</code>), so that opening the confirmation link on this device signs you in directly; it is ignored after 48 hours and removed as soon as you sign in. All of this is removed when you sign out, delete your account or use "Clear all data" (Section 10.1). Images, audio files and files larger than 20 MB that you open are not copied but shown in your device's browser through a temporary signed link to the file (valid for 10 minutes; for an image, the link already made for its preview, valid for up to 24 hours, can be used instead); the same happens with a video or document when no app on your device can open it or the copy fails. The link may remain in the browser's history, which Taskr cannot clear, but stops working when it expires.</p>
+    <p><strong>Trial and Pro-status record</strong>: a separate key, <code>tf-pro-v1</code>, holds the local record of your trial and Pro status. It contains when the free trial on this device started; the subscription status last received from RevenueCat, the subscription product last seen on this device and the moment this device first saw an active subscription; the latest time the app has seen, to detect a clock that was set back; while you are signed in, the last confirmed status of your account (its account identifier, its creation date and whether it has permanent Pro), so that your plan is still known when the app cannot check your session, for example offline; which account, or the trial of the device, last had Pro on this device and in what form (trial, subscription or permanent); and one-time markers, such as when, and for which account, the notice about the end of Pro was last shown or skipped. Where it records an account, it uses the account identifier (Supabase user ID), never your e-mail address or task content. This record is not synced and is not removed when you sign out or use "Clear all data"; deleting your account in the app removes that account's identifier from it. Section 8 describes what stays in it.</p>
+    <p><strong>Corruption backups</strong>: if Taskr detects a JSON parse error on startup (e.g. partial write during a crash), the raw corrupted data is preserved under <code>tf-v4-corrupt-&lt;timestamp&gt;</code> (or <code>tf-notes-corrupt</code> for the Notebook) as a debugging safeguard and, if you are signed in, Taskr restores your data from your cloud copy instead of starting empty. These backups are removed when you use Settings → "Clear all data", sign out or delete your account; they are not otherwise auto-deleted.</p>
 
     <h3>4.2 Cloud storage (only if you sign in)</h3>
     <p>If you create an account, your task data is synced to a <strong>Supabase PostgreSQL database</strong> in the EU region (Ireland).
-       Supabase is SOC 2 Type II compliant. Your data is protected by:</p>
+       Your own row in the <code>user_data</code> table holds your lists, tasks, settings and onboarding state, and your Notebook in a separate <code>notes</code> column; tasks in shared lists live in the <code>shared_tasks</code> table (Section 5). Supabase is SOC 2 Type II compliant. Your data is protected by:</p>
     <ul>
       <li><strong>Row Level Security (RLS)</strong> — database-level policies that ensure only you can read or write your own records.</li>
       <li><strong>TLS in transit</strong> — all communication between the app and our servers is encrypted with HTTPS/TLS 1.2+.</li>
       <li><strong>Encrypted at rest</strong> — Supabase encrypts the underlying database storage using AES-256.</li>
-      <li><strong>JWT authentication</strong> — every API call is authenticated with a short-lived signed JWT bound to your user ID.</li>
+      <li><strong>JWT authentication</strong> — every call the app makes to our database, file storage and server functions while you are signed in carries a short-lived signed JWT bound to your user ID; an attachment file itself is then loaded through a temporary signed link (Section 4.1). Looking up the name and icon of a list through an invite link (Section 5.1) needs no sign-in.</li>
     </ul>
 
     <h3>4.3 Attachments storage</h3>
-    <p>Attachments (Pro feature) are stored in <strong>Supabase Storage</strong> (S3-compatible object storage hosted by Supabase
+    <p>Attachments are stored in <strong>Supabase Storage</strong> (S3-compatible object storage hosted by Supabase
        in Ireland). Each file is namespaced under your user ID and protected by RLS policies that mirror your list access.</p>
 
     <h3>4.4 Notification tokens</h3>
@@ -192,10 +201,10 @@
        <a href="https://supabase.com/privacy" target="_blank">supabase.com/privacy</a>.</p>
 
     <h3>4.6 Realtime sync for shared lists</h3>
-    <p>When you join a shared list, Taskr opens a Supabase Realtime channel (over a secure WebSocket connection to
+    <p>While you have a shared list open in the app (as its owner or as a member), Taskr maintains a Supabase Realtime channel for that list (over a secure WebSocket connection to
        <code>wss://qgeuniiclrzndzmayekt.supabase.co</code>) to receive instant updates from other members.
        Edits you make while offline are queued locally and flushed when connectivity returns. The channel transmits only task content for
-       that specific shared list; your private tasks never traverse this channel.</p>
+       that specific shared list, including the account identifiers described in Section 5.2, plus the time of the last change; your private tasks never traverse this channel.</p>
 
     <h2 id="sharing">5. Sharing Data With Other Users (Shared Lists)</h2>
     <p>Taskr lets you collaborate on lists with other people. <strong>Sharing a list is fully opt-in</strong> and only happens when
@@ -203,24 +212,24 @@
 
     <h3>5.1 What happens when you invite someone</h3>
     <ul>
-      <li>The invitee's <strong>email address</strong> is stored in the <code>shared_list_members</code> table (lowercase, trimmed). It is visible to you and to other accepted members of that list.</li>
-      <li>The invitee receives a one-time invite link of the form <code>https://bma-nexus.github.io/taskr-invite/?token=&lt;UUID&gt;</code>.</li>
-      <li><strong>Invite link security</strong>: the token currently appears in the URL. Be aware that URLs may be retained in browser history, server-access logs (CDN, ISP), and referrer headers when the recipient opens the link. <strong>Treat invite links like passwords — do not share them publicly or post them in chat groups.</strong> A POST-based join flow (token in request body, not URL) is planned for a future version.</li>
-      <li><strong>Member cap</strong>: Free accounts can share with up to <strong>2 members</strong> per list; Pro accounts up to <strong>20 members</strong>.</li>
+      <li>The invitee's <strong>email address</strong> is stored in the <code>shared_list_members</code> table (lowercase, trimmed). The member list, including e-mail addresses, is visible only to you as the list owner; members do not see each other's addresses.</li>
+      <li>The invitee receives an invite link of the form <code>https://bma-nexus.github.io/taskr-invite/?token=&lt;UUID&gt;</code>. The token is <strong>not</strong> one-time: there is one token per list, it is reused for every e-mail invite to that list, it does not expire, and it is only replaced (rotated) when an accepted member is removed from the list or leaves it (including when a member clears their data or deletes their account). Until then, anyone with a Taskr account and a confirmed e-mail address who has the link can join the list as long as it is not full (see <strong>Member cap</strong> below), so share it only with people you want in the list.</li>
+      <li><strong>Invite link security</strong>: the token currently appears in the URL. Be aware that URLs may be retained in browser history, server-access logs (CDN, ISP), and referrer headers when the recipient opens the link. The link opens a web page hosted on GitHub Pages; like any website, GitHub receives the visitor's IP address and browser details. That page shows the name and icon of the list to anyone who opens the link, also without a Taskr account: it sends the token to our server and gets back only the list name and icon. <strong>Treat invite links like passwords — do not share them publicly or post them in chat groups.</strong></li>
+      <li><strong>Member cap</strong>: the limit does not count you as the owner. On the free plan you can share a list with <strong>2 people</strong>; with Pro, or during the 14-day trial, with <strong>20 people</strong>. Invitations that have not been accepted yet count towards the limit. The limit is enforced on our server and applies in the same way to people who join through the share link. From app version 1.7.0, someone who tries to join a full list is told the limit that applies to that list. It follows the plan of the list owner: our server applies the higher limit when the owner's account has active Pro status in our database (Section 1.9) or was created less than 14 days ago. If the limit later becomes lower, for example when a trial or subscription ends, people who are already in the list stay in it and invitations that were already sent can still be accepted.</li>
     </ul>
 
     <h3>5.2 What accepted members can see and do</h3>
     <ul>
-      <li>The list name, color, icon, and the e-mail addresses of every other member.</li>
-      <li>The full content of every task in the list: text, subtasks, notes, deadlines, priorities, locations, attachments, completion state, recurring rules.</li>
-      <li>Members can <strong>add, edit, complete and delete tasks</strong>. There is no per-field, per-task, or read-only permission system — every accepted member has equal access.</li>
-      <li>When one member edits a shared task, all other members receive a push notification via Firebase Cloud Messaging. The notification body contains the task summary (see Section 1.8).</li>
+      <li>The list name, color and icon. Members do not see the member list or each other's e-mail addresses; only the owner sees who is in the list (Section 5.1).</li>
+      <li>The full content of every task in the list: text, subtasks, details, deadlines, priorities, locations, attachments, completion state, recurring rules. Each shared task can also carry two account identifiers (Supabase user IDs, not e-mail addresses): that of the member the task is attributed to, which is the member who created it or brought it into the shared list (for tasks created with an older version of the app, the member who had last changed it), and that of the member who last changed it. Each attachment also contains the identifier of the member who uploaded it, as part of its storage path (Section 1.4). Taskr uses the first two identifiers to count each member's own tasks towards the limits of that member's plan. All of these identifiers are part of the task data that is sent to, and stored on, the devices of everyone in the list, the owner included (Section 4.1). The app does not display them and does not show members which identifier belongs to whom; only the list owner's app receives, with the member list, each member's identifier next to their e-mail address (Section 5.1).</li>
+      <li>Members can <strong>add, edit, complete and delete tasks</strong>. There is no per-field, per-task, or read-only permission system: on our server, every accepted member has equal access. Within the app, the limits of each member's own plan still apply to the tasks attributed to that member (see the bullet above): a member on the free plan who has reached the free task limit cannot add tasks to the list, and that member's own tasks above the limit can only be changed in a limited way, for example checked off, rescheduled or deleted.</li>
+      <li>When one member adds or completes a shared task, all other members receive a push notification via Firebase Cloud Messaging; editing a task does not trigger one. The notification contains the list name and the task text, not the name of the member who acted (see Section 1.8).</li>
     </ul>
 
     <h3>5.3 Stopping sharing</h3>
     <ul>
-      <li>If you are the <strong>owner</strong>, you can stop sharing the list at any time. This is a <strong>cascade delete</strong>: the shared-list record, its members, and its shared tasks are removed from the cloud. Every member loses access immediately. Members' local task copies remain on their devices unless they tap "Clear all data".</li>
-      <li>If you are a <strong>member</strong>, you can leave the list at any time (Settings → tap the list → Leave). Your membership is removed; the owner and other members keep their access. Your past edits to shared tasks remain in the shared list — we cannot retroactively delete them without affecting other members' tasks.</li>
+      <li>If you are the <strong>owner</strong>, you can stop sharing the list at any time. This is a <strong>cascade delete</strong>: the shared-list record, its members, and its shared tasks are removed from the shared tables in the cloud. When you stop sharing (rather than delete the list), the app first downloads the list's tasks, including tasks that members added, and after the cascade delete puts them back into your own list; from then on they are part of your private task data (Sections 1.2 and 4.2), without the identifiers of the member each task was attributed to and of its last editor (Section 5.2). Attachments that members added stay listed on those tasks, with the uploader's identifier in their storage path. Every member loses access immediately. Members' local copies of the list's tasks disappear at their next refresh: straight away if they have that list open at that moment (realtime channel), otherwise the next time the app reloads their shared lists, at the latest at the next app start.</li>
+      <li>If you are a <strong>member</strong>, you can leave the list at any time (open the list, tap the people icon to open its share sheet, then "Leave"). Your membership is removed; the owner and other members keep their access. Your past edits to shared tasks remain in the shared list, because we cannot retroactively delete them without affecting other members' tasks. Tasks attributed to you or last changed by you, and attachments you added there, keep your account identifier (Section 5.2) after you leave; Section 10.2 describes what happens to it if you delete your account.</li>
       <li>The owner can also remove individual members from a shared list at any time.</li>
     </ul>
 
@@ -232,15 +241,15 @@
 
     <h3>6.1 Supabase</h3>
     <ul>
-      <li><strong>Purpose:</strong> authentication, cloud database (PostgreSQL), file storage (S3-compatible), realtime subscriptions, transactional emails (verification, password reset).</li>
-      <li><strong>Region:</strong> EU (Ireland).</li>
+      <li><strong>Purpose:</strong> authentication, cloud database (PostgreSQL), file storage (S3-compatible), realtime subscriptions, server functions (joining a shared list through an invite link, showing the list name and icon on the invite web page, sending shared-list push notifications and invitation e-mails, and receiving subscription updates from RevenueCat), transactional emails (account verification, password reset and confirming a change of e-mail address).</li>
+      <li><strong>Region:</strong> EU (Ireland) for the database, file storage and authentication. Our server functions run in the Ireland region as well: as of app version 1.7.0 the app asks for this on every call, and so do the invite web page and the address that receives RevenueCat's notifications. Calls from app versions older than 1.7.0 may run in the Supabase region closest to the caller; the data these functions write to our database is stored in Ireland.</li>
       <li><strong>Privacy policy:</strong> <a href="https://supabase.com/privacy" target="_blank">supabase.com/privacy</a></li>
     </ul>
 
     <h3>6.2 Firebase Cloud Messaging (FCM) — Google</h3>
     <ul>
       <li><strong>Purpose:</strong> delivering push notifications for shared-list activity to your device.</li>
-      <li><strong>Data shared with Google:</strong> the device FCM token and the notification payload (title and body, which may include task text such as "John added a task: Buy milk"). Sent only when a co-member of a list you own/joined triggers an event.</li>
+      <li><strong>Data shared with Google:</strong> the device FCM token and the notification payload: the title (the list name), the body ("New task:" or "Task completed:" in the app language of the member who acted, followed by the task text) and three data fields (<code>listId</code>, <code>sharedListId</code>, <code>taskId</code>) that let the app open the right task. The payload does not contain the name or e-mail address of the member who acted. Sent only when a co-member of a list you own/joined adds or completes a task.</li>
       <li><strong>Region:</strong> Google's FCM is a global service. Google may route notifications through servers worldwide.</li>
       <li><strong>Privacy policy:</strong> <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></li>
     </ul>
@@ -254,11 +263,11 @@
 
     <h3>6.4 External maps applications (your choice)</h3>
     <p>If you add a location to a task and tap "Open in Maps", Taskr launches your device's default maps application
-       (Google Maps, Apple Maps, etc.) with the address you entered. We do not send the location to any server — we simply hand off
+       (Google Maps, Apple Maps, etc.) with the address you entered or, if the task has coordinates, with those coordinates (the text you typed is then passed along as a label). We do not send the location to any server — we simply hand off
        to your maps app. The maps app's privacy policy applies once the handoff occurs.</p>
 
     <h3>6.5 External browser (URL handoff)</h3>
-    <p>Taskr automatically detects URLs in your task text, subtask text, and notes (matching <code>https://...</code> and <code>www....</code> patterns). When you tap such a link:</p>
+    <p>Taskr automatically detects URLs in your task text, subtask text, task details and Notebook notes (matching <code>https://...</code> and <code>www....</code> patterns). When you tap such a link:</p>
     <ul>
       <li>Taskr opens the URL in your device's default external browser (Chrome, Samsung Internet, etc.) via the Capacitor Browser plugin.</li>
       <li>Taskr does <strong>not</strong> validate, preview, or pre-fetch the URL — no network call is made by Taskr itself.</li>
@@ -270,30 +279,31 @@
     <h3>6.6 Android share sheet (export and invite links)</h3>
     <p>Two features hand data to the Android share sheet, which allows you to forward it to any other app on your device (Email, SMS, WhatsApp, cloud storage apps, etc.):</p>
     <ul>
-      <li><strong>"Share invite link"</strong> (in the Share modal): hands the list name and the invite URL (containing the token, see Section 5.1) to the share sheet. The receiving app — and any app installed on the device — may briefly see this data while the share dialog is open.</li>
-      <li><strong>"Export data"</strong> (in Settings): hands a JSON or CSV file containing your tasks and lists to the share sheet so you can save it to cloud storage, e-mail it to yourself, etc. The file contains your full task content; treat it as you would any backup of personal data.</li>
+      <li><strong>"Share via link"</strong> (in the Share modal): hands the list name and the invite URL (containing the token, see Section 5.1) to the share sheet. The receiving app — and any app installed on the device — may briefly see this data while the share dialog is open.</li>
+      <li><strong>Exports</strong> (in Settings): "Export data" (a CSV of your tasks), "Export notes (CSV)" and "Create backup (JSON)" (a restorable backup of your lists, tasks, settings, tour state and notes) each first write the file to your device's public <strong>Documents</strong> folder. The two CSV exports then open the share sheet straight away, so you can save the file to cloud storage, e-mail it to yourself, etc. After "Create backup (JSON)" the app first shows the folder and the file name, which contains the date and the time to the minute (for example <code>taskr-backup-2026-10-03-1430.json</code>), so a new backup is kept next to earlier ones instead of replacing them, unless both are made in the same minute; the backup only goes to the share sheet if you tap "Share" in that window. If a file cannot be saved, the app hands its content to the share sheet as text instead. The files stay in Documents even if you cancel or skip sharing (the app tells you where they are), other apps with access to that folder can read them, and signing out, "Clear all data" and deleting your account do not delete them; they stay there until you delete them yourself. The files contain your full task and note content. The JSON backup also contains your settings (including the two numbers described in Section 1.2), the account identifier (Supabase user ID, not your e-mail address) stored as creator on tasks you created while signed in (Section 1.2), and for each attachment its file name, type, size, upload time and storage location, which begins with the account identifier of the person who uploaded it; the attachment files themselves are not included. Treat these files as you would any backup of personal data.</li>
     </ul>
     <p>Taskr does not control what the receiving app does with the data once you tap "share". Choose the receiving app carefully.</p>
 
     <h3>6.7 Resend (transactional email service)</h3>
     <p>When you send an invite to a shared list using the e-mail field (instead of the share-link button), Taskr sends an automated invitation e-mail to the invitee through <strong>Resend</strong> (operated by Resend Labs Inc., USA, with EU region in Ireland). The same Resend service is also used to deliver Supabase Auth e-mails such as account confirmation and password reset.</p>
     <ul>
-      <li><strong>Data shared with Resend:</strong> the invitee's e-mail address, the inviter's e-mail address (displayed as "from" inside the message), the shared-list name and icon, and the one-time invite token (embedded in the link). For Supabase Auth e-mails: your e-mail address plus the confirmation/reset link.</li>
+      <li><strong>Data shared with Resend:</strong> the invitee's e-mail address, the inviter's e-mail address (it appears in the subject line, which inbox previews and lock screens may show, and inside the message; the sender address itself is <code>noreply@bma-nexus.com</code>), the shared-list name and icon, and the list's invite token (embedded in the link; see Section 5.1 for how long it stays valid). For Supabase Auth e-mails: your e-mail address (when you change it, also the new address) plus the confirmation or reset link.</li>
       <li><strong>Region:</strong> Taskr uses Resend's <code>eu-west-1</code> (Ireland) region so that e-mail processing remains within the EU. Resend's full data-processing policy: <a href="https://resend.com/legal/privacy-policy" target="_blank">resend.com/legal/privacy-policy</a>. DPA: <a href="https://resend.com/legal/dpa" target="_blank">resend.com/legal/dpa</a>.</li>
       <li><strong>Retention:</strong> Resend retains delivery logs (recipient, send timestamp, delivery status) for up to 30 days for operational and abuse-prevention purposes. E-mail body content is not retained after successful delivery.</li>
-      <li><strong>Legal basis:</strong> Art. 6(1)(b) — performance of contract (delivering the invite you initiated). For Supabase Auth e-mails: Art. 6(1)(b) for account confirmation and Art. 6(1)(f) (legitimate interest in account security) for password reset.</li>
+      <li><strong>Limits on invitation e-mails:</strong> Taskr only sends an invitation e-mail for an invitation that is still open, and limits how many invitation e-mails can be sent per list owner (per hour and per day), per invitation (per day) and for all Taskr users together (per day). This prevents abuse and keeps e-mail capacity free for account confirmation and password reset; the legal basis is our legitimate interest in preventing abuse (Section 2). To apply these limits, our server keeps a short-lived record of each invitation e-mail (Section 1.3); this record stays in our database and is not sent to Resend. If a limit is reached, the invitation is still created but no e-mail is sent, and the app suggests sharing the invite link instead.</li>
+      <li><strong>Legal basis:</strong> Art. 6(1)(b) — performance of contract (delivering the invite you initiated). For Supabase Auth e-mails: Art. 6(1)(b) for account confirmation and for a change of e-mail address that you request, and Art. 6(1)(f) (legitimate interest in account security) for password reset.</li>
     </ul>
-    <p>If you do not want an invite e-mail to be sent, use the "Share invite link" button instead (Section 6.6) — that pathway never touches Resend.</p>
+    <p>If you do not want an invite e-mail to be sent, use the "Share via link" button instead (Section 6.6) — that pathway never touches Resend.</p>
 
     <h3>6.8 RevenueCat (Pro subscription management)</h3>
-    <p>When you purchase, restore or hold a Taskr Pro subscription, Taskr uses <strong>RevenueCat</strong> (operated by RevenueCat, Inc., United States) to validate the purchase with Google Play, keep your subscription status up to date, and unlock Pro across your devices. RevenueCat acts as our <strong>data processor / service provider</strong> — it processes this data only on our instructions to run the subscription, not as an independent party for its own purposes (which is why, in Google Play "Data safety" terms, this is disclosed as <em>collected</em> but not <em>shared</em>).</p>
+    <p>Taskr uses <strong>RevenueCat</strong> (operated by RevenueCat, Inc., United States) to determine whether your account has Pro status and, if you subscribe, to validate the purchase with Google Play, keep your subscription status up to date, and unlock Pro across your devices. The RevenueCat SDK is initialised on <strong>every installation</strong>, whether or not you ever buy anything. RevenueCat acts as our <strong>data processor / service provider</strong> — it processes this data only on our instructions, not as an independent party for its own purposes (which is why, in Google Play "Data safety" terms, this is disclosed as <em>collected</em> but not <em>shared</em>).</p>
     <ul>
-      <li><strong>Data Taskr sends to RevenueCat:</strong> your Taskr account identifier (Supabase user ID, used as the "App User ID"). Taskr does <strong>not</strong> send RevenueCat your e-mail, name, password or payment-card details.</li>
-      <li><strong>Data RevenueCat processes:</strong> your purchase/transaction history (the product, purchase and renewal dates, and subscription status, validated directly with Google Play), together with basic technical metadata its servers receive such as IP address, operating system and app version.</li>
-      <li><strong>Purpose:</strong> validating and managing your subscription, plus aggregate subscription metrics on our behalf. It is not used for advertising or behavioural profiling.</li>
+      <li><strong>Data Taskr sends to RevenueCat:</strong> an anonymous app-user identifier generated by the SDK on installation and, once you sign in, your Taskr account identifier (Supabase user ID, used as the "App User ID"). This applies to every signed-in user, not only to buyers. Taskr does <strong>not</strong> send RevenueCat your e-mail, name, password or payment-card details.</li>
+      <li><strong>Data RevenueCat processes:</strong> basic technical metadata its servers receive from every installation, such as IP address, operating system and app version, and, only if you buy a subscription, your purchase/transaction history (the product, purchase and renewal dates, and subscription status, validated directly with Google Play).</li>
+      <li><strong>Purpose:</strong> validating and managing your subscription, plus aggregate subscription metrics and the totals of installations described in Section 1.7, on our behalf. It is not used to show or target advertising, or for behavioural profiling.</li>
       <li><strong>Region:</strong> RevenueCat stores data on Amazon Web Services in the <strong>United States</strong> (see Section 7 for the transfer safeguard).</li>
       <li><strong>Safeguards:</strong> RevenueCat processes your data under its Data Processing Addendum. Per that DPA and RevenueCat's privacy policy, RevenueCat acts as a data processor and does not sell personal data.</li>
-      <li><strong>Backend webhook:</strong> RevenueCat notifies our Supabase backend when your subscription changes, so we can keep your Pro status and storage quota in sync. Only your account identifier and subscription status are transmitted — no payment data.</li>
+      <li><strong>Backend webhook:</strong> RevenueCat notifies our Supabase backend when your subscription changes, so we can keep your Pro status, your storage quota and the member limit of your shared lists (Section 5.1) in sync. To record the current status, our backend may also retrieve the subscription status of the account concerned from RevenueCat's API (when a purchase moves to another account, of both accounts); the only information about you in that request is the account identifier, and from the answer our backend uses only whether Pro is active and until when. In our database the backend stores your account identifier, whether Pro is active, until when, and when this was last updated (Section 1.9). The notification itself is RevenueCat's standard event message about the subscription change; besides your account identifier it describes the event, for example its type, the product and entitlement, the end date, the price and country of purchase and the store's transaction identifiers, and it contains no card or payment-method details.</li>
       <li><strong>Restore:</strong> when you tap "Restore purchases", Taskr asks RevenueCat to re-check your account's subscription status; no new data is collected.</li>
       <li><strong>Privacy policy:</strong> <a href="https://www.revenuecat.com/privacy" target="_blank">revenuecat.com/privacy</a> · DPA: <a href="https://www.revenuecat.com/dpa" target="_blank">revenuecat.com/dpa</a></li>
     </ul>
@@ -301,22 +311,24 @@
     <h3>6.9 Google Play Billing (payments)</h3>
     <p>Payments for Taskr Pro are processed entirely by <strong>Google Play's billing system</strong>. Google handles your payment method, the transaction and the purchase token, and any billing or refund support. We never receive your card number or billing details — only confirmation (via RevenueCat) that a valid subscription exists. Google's processing of your payment is governed by the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a>.</p>
 
-    <p><strong>We do not embed any advertising networks, behavioural-analytics platforms, profiling SDKs or social-media SDKs.</strong> The only third-party SDK that processes your data is RevenueCat (Section 6.8), used solely for Pro subscription management.</p>
+    <p><strong>We do not embed any advertising networks, behavioural-analytics platforms, profiling SDKs or social-media SDKs.</strong> Apart from our backend provider Supabase (Section 6.1) and Google Play itself (Sections 6.3 and 6.9, including its in-app rating prompt, Section 1.7), the only third-party SDKs that process your data are RevenueCat (Section 6.8, Pro status and subscription management) and Firebase Cloud Messaging (Section 6.2, shared-list push notifications).</p>
 
     <h2 id="transfers">7. International Data Transfers</h2>
-    <p>Your account data and task data are stored in the EU (Ireland).</p>
+    <p>Your account data and task data are stored in the EU (Ireland), and our own server functions run in Ireland as well. Only calls from app versions older than 1.7.0 may still be handled in a Supabase region outside the EU (Section 6.1); updating the app ends this.</p>
     <p>However, push notifications sent via Firebase Cloud Messaging may transit through Google servers located outside the EU.
        Google relies on the EU-US Data Privacy Framework and Standard Contractual Clauses (SCCs) approved by the European Commission
        to comply with EU data protection law for these transfers. Details: <a href="https://policies.google.com/privacy/frameworks" target="_blank">policies.google.com/privacy/frameworks</a>.</p>
-    <p>If you subscribe to Taskr Pro, your subscription and purchase data are processed by RevenueCat on servers in the <strong>United States</strong> (Section 6.8). RevenueCat relies on the European Commission's Standard Contractual Clauses (and, where applicable, the EU–US Data Privacy Framework), as set out in its Data Processing Addendum, to provide an adequate safeguard for this transfer.</p>
+    <p>The identifiers and technical metadata described in Section 6.8 are sent by the RevenueCat SDK, on every installation, to RevenueCat's servers in the <strong>United States</strong>; if you subscribe to Taskr Pro, your subscription and purchase data are processed there as well. RevenueCat relies on the European Commission's Standard Contractual Clauses (and, where applicable, the EU–US Data Privacy Framework), as set out in its Data Processing Addendum, to provide an adequate safeguard for this transfer.</p>
 
     <h2 id="retention">8. Data Retention</h2>
     <ul>
-      <li><strong>Local data on your device</strong> is kept until you uninstall the app or use Settings → Clear all data.</li>
+      <li><strong>Local data on your device</strong> is kept until you uninstall the app, use Settings → Clear all data, sign out, or delete your account from within the app. Signing out and in-app account deletion wipe your task data and your sign-in session on that device: tasks, lists, settings, the Notebook, corruption backups, the offline queue and cached attachments (Section 4.1). Technical app state without task content is kept, such as a counter used to ask you once for a rating on Google Play (Section 1.7), a one-time maintenance marker for reminders and the local trial and Pro-status record <code>tf-pro-v1</code> (Sections 1.9 and 4.1). That record keeps, among other technical markers, when the free trial on this device started, the subscription product last seen on this device and the moment this device first saw an active subscription. When you sign out, the last confirmed status of your account is removed from it. If the trial of the device itself has ended, the record can still keep the account identifier (Supabase user ID, not your e-mail address) of the account that last had Pro or a trial on this device; the app uses it to show the notice about the end of Pro if you sign in to that account again after its Pro has ended. That identifier stays until another account with Pro or a trial is used on this device, until that account is deleted in the app on this device, or until you uninstall the app or clear its storage. In-app account deletion removes the identifier of the deleted account from the record; the identifier of another account that had Pro on this device earlier can remain.</li>
       <li><strong>Cloud account data</strong> is kept as long as your account is active.</li>
-      <li><strong>After account deletion request</strong> (see Section 10), we delete your account, your task data, your attachments and your FCM tokens from our active systems within <strong>7 days</strong>. Backups may retain a copy for up to <strong>30 additional days</strong> before being overwritten in the normal backup-rotation cycle.</li>
+      <li><strong>After account deletion</strong> (see Section 10): the in-app "Delete account" button removes your account, your task data and notes, your attachments and your FCM tokens from our active systems immediately; after an e-mail request we do so within <strong>7 days</strong>. Backups may retain a copy for up to <strong>30 additional days</strong> before being overwritten in the normal backup-rotation cycle.</li>
       <li><strong>Email invitations</strong> you sent that have not yet been accepted are deleted when you delete your account or when the invited person rejects the invite.</li>
-      <li><strong>Server logs</strong> (e.g. error logs from edge functions) are kept by Supabase for up to 7 days for operational reasons and never include task content.</li>
+      <li><strong>Invitation e-mail records</strong> (Section 1.3) are deleted in a clean-up that removes all records older than two days. The clean-up runs each time our server checks the limits for a new invitation e-mail from any user, so a record can stay longer if no invitation e-mails are requested for a while. All records for a list are deleted straight away when the list stops being shared (Section 5.3), and all your records when you delete your account.</li>
+      <li><strong>Other technical counters</strong>: to limit how often shared-list notifications can be sent, our server records your account identifier and the time of each request that it lets through. Records older than an hour are removed the next time you trigger such a notification. Our server also keeps a running total of the storage space your attachments use (Section 1.9). Both are deleted when you delete your account.</li>
+      <li><strong>Server logs</strong> (e.g. error logs from edge functions) are kept by Supabase for up to 7 days for operational reasons and never include task content. They can contain account identifiers (for the subscription notifications of Section 6.8 also whether Pro is active and until when), identifiers of lists, the first characters of a push token and technical error details.</li>
       <li><strong>Subscription &amp; purchase records</strong> (your Pro flag in <code>pro_users</code> and the subscription data held by RevenueCat) are kept while your subscription is active and afterwards only as long as needed for legitimate business and legal/accounting purposes. The purchase record held by <strong>Google Play</strong> is governed by Google's own retention policy and is outside our control.</li>
     </ul>
 
@@ -327,9 +339,9 @@
       <li><strong>Right to rectification (Art. 16)</strong> — correct inaccurate or incomplete data (you can do this yourself from within the app, or contact us).</li>
       <li><strong>Right to erasure (Art. 17)</strong> — request deletion of your account and all associated data (see Section 10).</li>
       <li><strong>Right to restriction of processing (Art. 18)</strong> — ask us to limit how we use your data while a dispute is being resolved.</li>
-      <li><strong>Right to data portability (Art. 20)</strong> — receive your data in a machine-readable format. You can export all your task data yourself via Settings → Export data (CSV).</li>
+      <li><strong>Right to data portability (Art. 20)</strong> — receive your data in a machine-readable format. You can export your data yourself from Settings: "Export data" gives a CSV of your personal task list (without coordinates, attachments, per-task timezone or shared tasks), "Export notes (CSV)" a CSV of your Notebook, and "Create backup (JSON)" a restorable backup of your lists, tasks (all fields), settings, tour state and notes. Attachment files and shared lists are not part of any export; attachments can be opened and saved one by one from the task. For anything not covered, contact us.</li>
       <li><strong>Right to object (Art. 21)</strong> — object to processing based on legitimate interests.</li>
-      <li><strong>Right to withdraw consent (Art. 7(3))</strong> — withdraw consent for processing where consent is the legal basis (you can disable notifications, sign out, or delete your account at any time).</li>
+      <li><strong>Right to withdraw consent (Art. 7(3))</strong> — withdraw consent for processing where consent is the legal basis (you can disable notifications, which also cancels the reminders already scheduled on your device, sign out, or delete your account at any time).</li>
       <li><strong>Right to lodge a complaint (Art. 77)</strong> — file a complaint with your national supervisory authority. In the Netherlands this is the
           <a href="https://autoriteitpersoonsgegevens.nl/" target="_blank">Autoriteit Persoonsgegevens (AP)</a>.</li>
     </ul>
@@ -342,27 +354,36 @@
     <h3 id="data-deletion">10.1 Clear all data (in Settings)</h3>
     <p>Open the app → <strong>Settings → Clear all data</strong>. Taskr performs a synchronous wipe in this order:</p>
     <ol>
+      <li><strong>Attachments</strong> (if you are signed in): every file you uploaded that is still linked to a task you can reach at that moment (your personal tasks and tasks in the shared lists you are still in) is deleted from Supabase Storage. Files on tasks in lists you left earlier are no longer reachable from the app; they are removed only when your account is deleted through the e-mail route (Section 10.2).</li>
       <li><strong>Shared lists you own</strong>: each is unshared (cascade delete — see Section 5.3). All members lose access.</li>
       <li><strong>Shared lists you joined</strong>: you leave each (your membership is removed; the list survives for the owner and other members).</li>
-      <li><strong>Attachments</strong>: every file you uploaded for any task is deleted from Supabase Storage.</li>
-      <li><strong>On-device data</strong>: <code>tf-v4</code> + all corruption backups + the cached shared-task snapshot are removed.</li>
-      <li><strong>Cloud user data</strong> (if you are signed in): your <code>user_data</code> row is wiped (lists + tasks + settings set to empty).</li>
+      <li><strong>On-device data</strong>: <code>tf-v4</code>, <code>tf-notes</code>, all corruption backups, the local copy of shared tasks, the offline queue, the cache of opened attachments and the e-mail address of a registration awaiting confirmation (Section 4.1) are removed. Not removed are your sign-in session (if you are signed in, you stay signed in) and technical records without task content, such as the local trial and Pro-status record <code>tf-pro-v1</code> (Section 4.1), the rating counter (Section 1.7) and a one-time maintenance marker for reminders. While you stay signed in, <code>tf-pro-v1</code> can still hold the last confirmed status of your account, including its account identifier and creation date.</li>
+      <li><strong>Cloud user data</strong> (if you are signed in): your <code>user_data</code> row is wiped (lists, tasks, notes and settings set to empty).</li>
     </ol>
     <p>This action is irreversible. Local notifications you previously scheduled are also cancelled. Note that "Clear all data" does <strong>not</strong> delete your Supabase Auth account itself (your e-mail + password remain) — see 10.2 for full account deletion.</p>
 
     <h3>10.2 Delete your account and all remaining cloud data</h3>
-    <p>To delete your authentication account itself (e-mail + password in Supabase Auth) and any remaining cloud data, send an email to
+    <p>You can delete your authentication account itself (e-mail + password in Supabase Auth) and any remaining cloud data in two ways.</p>
+    <p><strong>In the app</strong>: sign in, open <strong>Settings → Delete account</strong> and confirm. Taskr then, immediately and without a confirmation e-mail:</p>
+    <ul>
+      <li>Deletes every attachment you uploaded that is still linked to a task you have access to at that moment (personal tasks and tasks in the shared lists you are still in) from Supabase Storage. Files on tasks in lists you left earlier are not removed by this button; they are removed only if you delete your account through the e-mail route below instead.</li>
+      <li>Runs a server function (<code>delete_my_account</code>) that removes the shared lists you own together with their tasks and memberships (all members lose access), your memberships in other people's lists, your <code>user_data</code> row (tasks, notes, settings), your FCM tokens, your Pro flag in <code>pro_users</code> and finally your Supabase Auth account. Tasks you created in, or moved to, other people's shared lists stay in those lists, because they belong to those lists. In our database, the function replaces your account identifier as the creator of those tasks with a neutral marker, and the reference to you as the member who last changed a task is cleared. Copies that other members' apps already hold can still contain your identifier, and a change sent later from such a copy (for example an edit made offline before your deletion) can store it in the task again. If you attached a file to a task in another person's shared list, that task can still list the file's name and storage path, which contains the identifier of your deleted account (the file itself is deleted as described in the first point above); that identifier no longer belongs to any account.</li>
+      <li>Wipes your task data and your sign-in session on the device and removes the identifier of your deleted account from the local trial and Pro-status record, as described in Section 8. The rest of that record and the other technical records described there stay on the device.</li>
+    </ul>
+    <p>This is irreversible. Your RevenueCat customer record (Section 6.8) is not removed by this button; e-mail us if you want it deleted as well.</p>
+    <p><strong>By e-mail</strong>: send an email to
        <a href="mailto:bmanexusapps@gmail.com">bmanexusapps@gmail.com</a> with the subject "<strong>Account Deletion Request</strong>"
-       and from the email address registered with Taskr.</p>
-    <p>We will:</p>
+       and from the email address registered with Taskr. We will:</p>
     <ul>
       <li>Verify the request (we may ask you to confirm from the registered email address).</li>
       <li>Delete your Supabase Auth row, your remaining <code>user_data</code> row, your FCM tokens and any shared-list memberships you forgot to leave, within <strong>7 days</strong>.</li>
       <li>Delete your Pro flag (<code>pro_users</code> row) and, on request, delete your RevenueCat customer record from RevenueCat's dashboard.</li>
+      <li>Delete any attachments you uploaded that are still in Supabase Storage, including files on tasks in lists you left earlier.</li>
       <li>Backups containing residual copies are overwritten within <strong>30 additional days</strong>.</li>
       <li>Send you a confirmation email once deletion is complete.</li>
     </ul>
     <p>If you are the owner of a shared list at the moment of account deletion, that list is unshared (cascade delete) and all members lose access.</p>
+    <p>An invitation that another user sent to your e-mail address and that you have not accepted is not removed with your account: it stays with that list, with your e-mail address, until the owner removes it or the list stops being shared.</p>
 
     <h2 id="children">11. Children's Privacy</h2>
     <p>Taskr is suitable for users aged 13 and older.</p>
@@ -377,13 +398,30 @@
     <ul>
       <li>The "Last updated" date at the top of this page will change.</li>
       <li>The version number will be incremented.</li>
-      <li>For significant changes that affect your rights, we will display an in-app notice the next time you open Taskr
-          (signed-in users will see a one-time banner).</li>
+      <li>The version history below (Section 12.1) describes what changed, and significant changes are also mentioned in the
+          release notes of the corresponding app update on Google Play.</li>
     </ul>
     <p>Continued use of the app after changes constitutes acceptance of the updated policy. You can always review the latest version
        at the URL where this page is published.</p>
 
     <h3>12.1 Version history</h3>
+    <p><strong>Version 2.5 (October 8, 2026)</strong>:</p>
+    <ul>
+      <li>Added the <strong>Notebook</strong>: notes (title, text, optional list, pinned state) are stored next to your tasks under their own local key and cloud column, are never shared with members of a shared list, and follow the same deletion rules as tasks (Sections 1.2, 4.1, 4.2, 10.1). On the free plan you can create up to 15 notes of up to 200 characters each, with Pro or during the trial up to 200 notes of up to 5,000 characters each, and nothing is deleted when you are above a free limit (Section 1.2). The free-text field of a task is now called its details (Sections 1.2, 1.8, 5.2, 6.5).</li>
+      <li>Described the free plan, the 14-day trial and Pro as they work as of app version 1.7.0 and on our server: when you are signed in, the trial runs until 14 days after your account was created, and our server applies the same rule (Sections 1.1, 1.9); the limits of your plan are applied with your Pro status, the creation date of your account, the account identifiers on shared tasks, the series identifiers of recurring tasks and two numbers in your settings (Sections 1.2, 3); within a shared list, each member's own plan applies to the tasks attributed to that member (Section 5.2); your Pro status in our database, or during the trial the creation date of your account, also sets your storage quota and the member limit of your shared lists (Sections 1.9, 6.8).</li>
+      <li>Updated the member limit to how it works as of this version: it does not count the owner, it is 2 people on the free plan and 20 with Pro or during the trial, invitations that have not been accepted yet count towards it, it follows the plan of the list owner, and our server applies it in the same way to people who join through the share link, who also need a confirmed e-mail address; when the limit becomes lower, people already in the list stay and invitations already sent can still be accepted (Section 5.1).</li>
+      <li>Disclosed the account identifiers (Supabase user IDs, not e-mail addresses) stored with tasks: a task you create while signed in records you as its creator (Section 1.2); a shared task can carry the identifiers of the member it is attributed to and of the member who last changed it, and an attachment carries the uploader's identifier in its storage path; everyone in the list receives them, also over the realtime channel, which is open while you have a shared list open in the app, and they are kept in the local copy of shared tasks (Sections 1.3, 4.1, 4.6, 5.2). Also described what happens to them when a member leaves, when the owner stops sharing and the list's tasks return to the owner's own list, and when you delete your account (Sections 5.3, 10.2), and what the JSON backup contains (Section 6.6).</li>
+      <li>Described what stays on your device: the local trial and Pro-status record (<code>tf-pro-v1</code>), what it contains, that signing out and &ldquo;Clear all data&rdquo; do not remove it, and that in-app account deletion removes the deleted account's identifier from it (Sections 4.1, 8, 10.1, 10.2); the e-mail address of a registration that awaits confirmation (Sections 4.1, 10.1); that &ldquo;Clear all data&rdquo; does not sign you out (Section 10.1); and that images, audio files and large files open in your browser through a temporary link that can remain in the browser's history (Section 4.1).</li>
+      <li>Added the limits on invitation e-mails and the short-lived record our server keeps to apply them, which holds a SHA-256 hash instead of the invitee's address (Sections 1.3, 6.7, 8). The invite web page now shows the name and icon of the list to anyone who opens the link; this page, and the pages that the links in account e-mails lead to, are hosted on GitHub Pages (Sections 1.1, 5.1).</li>
+      <li>Listed the server functions we run at Supabase and where they run: in Ireland, except for calls from app versions older than 1.7.0 (Sections 6.1, 7). Our backend may also retrieve the current subscription status from RevenueCat's API, and the content of RevenueCat's notifications is described more fully (Section 6.8).</li>
+      <li>Added the confirmation e-mail for changing your e-mail address in Settings, with the data sent through Resend and the legal basis (Sections 1.1, 6.1, 6.7).</li>
+      <li>Updated the exports: after &ldquo;Create backup (JSON)&rdquo; the app first shows the folder and the file name, which contains the date and time, and shares the backup only if you ask; if a file cannot be saved, its content is shared as text; export files are not deleted by signing out, &ldquo;Clear all data&rdquo; or account deletion (Section 6.6).</li>
+      <li>Documented behaviour the app has as of the update this version accompanies: the push token row is deleted when you sign out (Section 4.4); &ldquo;Clear all data&rdquo; and in-app account deletion delete every attachment you uploaded that is still linked to a task you can reach, including files on tasks in the shared lists you are still in (Sections 10.1, 10.2); corruption backups, the offline queue and the cache of opened attachments are removed on clear-all, sign-out and account deletion (Sections 4.1, 8, 10.1); turning notifications off cancels the reminders already scheduled (Section 9); a restorable JSON backup exists next to the CSV exports (Sections 6.6, 9).</li>
+      <li>Corrected statements about data collection that did not match the app: RevenueCat runs on every installation and receives the account identifier of every signed-in user, not only of buyers (Sections 1.7, 1.9, 2, 3, 6.8, 7); the push token is stored for every signed-in user who allowed notifications, there is no separate shared-list push switch (Section 1.5); attachments are not a Pro-only feature (Sections 1.4, 3, 4.3); Firebase Cloud Messaging is a second third-party SDK next to RevenueCat, and Google Play provides the in-app rating prompt, which Taskr asks for at most once (Sections 1.7, 6, 8); shared-list pushes are sent when a task is added or completed, not edited, do not name the member who acted and carry three data fields that let the app open the right task (Sections 1.8, 5.2, 6.2); local reminders show only the task title, and the optional recurring reminder contains no task content (Section 1.8); coordinates are not converted into an address (Section 1.6); the local cache holds the full content of all shared tasks, not just badges (Section 4.1); without an account your content stays on the device, but the RevenueCat SDK and, if you allow notifications, Google Play services still receive an identifier (Section 4.1).</li>
+      <li>Corrected statements about sharing, exports and deletion: the invite link is one non-expiring token per list, rotated only when an accepted member is removed or leaves (Sections 5.1, 6.7); only the owner sees the member list, and members receive the owner's e-mail address only through the invitation e-mail (Sections 1.3, 5.1, 5.2); a member leaves a list via its share sheet, not via Settings, and members' local copies disappear at the next refresh after the owner stops sharing (Section 5.3); the inviter's e-mail address also appears in the invite e-mail's subject line (Section 6.7); exports are first saved to the Documents folder and stay there (Section 6.6); the CSV export omits coordinates, attachments, per-task timezone and shared tasks (Section 9); signing out wipes your task data on the device (Section 8); the app has its own &ldquo;Delete account&rdquo; button next to the e-mail route (Sections 8, 10.2).</li>
+      <li>Removed the promised in-app notice for policy changes, which the app does not have; changes are announced through this version history and the Play Store release notes (Section 12). Also removed the announced POST-based join flow for invite links, for which no work is planned (Section 5.1).</li>
+      <li>Made several statements more precise after a final check against the app and our server: &ldquo;Open in Maps&rdquo; hands a task's coordinates to your maps app when the task has them, and a JSON backup contains them (Sections 1.6, 6.4, 6.6); RevenueCat's dashboard shows us totals of installations, which we look at together with simple counts from our own database (Sections 1.7, 3, 6.8); our server keeps a record of recent shared-list notification requests and a running total of your attachment storage, and its logs can contain account identifiers (Section 8); from app version 1.7.0, someone who tries to join a full list is told its limit (Section 5.1); an open invitation that another user sent to your address is not removed with your account (Section 10.2); and which calls carry your sign-in token (Section 4.2).</li>
+    </ul>
     <p><strong>Version 2.4 (September 8, 2026)</strong>:</p>
     <ul>
       <li>Corrected the stated hosting region. Supabase (database, file storage, authentication) and Resend both run in the
@@ -438,7 +476,7 @@
 
     <div class="footer">
       <p>© 2026 BMA Nexus. All rights reserved.</p>
-      <p>Privacy Policy v2.4 — September 8, 2026 — supersedes v2.3 (June 29, 2026), v2.2 (May 27, 2026), v2.1 (May 26, 2026), v2.0 (May 10, 2026) and v1.0 (April 2026).</p>
+      <p>Privacy Policy v2.5 (October 8, 2026) supersedes v2.4 (September 8, 2026), v2.3 (June 29, 2026), v2.2 (May 27, 2026), v2.1 (May 26, 2026), v2.0 (May 10, 2026) and v1.0 (April 2026).</p>
     </div>
   </div>
 </body>
